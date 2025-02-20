@@ -1,21 +1,27 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { ICreateProduct, IUpdateProduct } from "utils/types";
 
 export class ProductRepository {
-  private prisma: PrismaClient;
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  private prisma = new PrismaClient();
 
-  createProduct = async (data: Prisma.ProductCreateInput) => {
+  createProduct = async (data: ICreateProduct) => {
+    const { categoryId, ...productData } = data;
     return this.prisma.product.create({
-      data,
+      data: {
+        ...productData,
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
+      },
     });
   };
-  
+
   getAllProducts = async () => {
     return this.prisma.product.findMany();
   };
-  
+
   getProductById = async (id: string) => {
     return this.prisma.product.findUnique({
       where: {
@@ -24,12 +30,23 @@ export class ProductRepository {
     });
   };
 
-  updateProduct = async (id: string, data: Prisma.ProductUpdateInput) => {
+  updateProduct = async (id: string, data: IUpdateProduct) => {
+    const { categoryId, ...productData } = data;
+
     return this.prisma.product.update({
       where: {
         id,
       },
-      data,
+      data: {
+        ...productData,
+        ...(categoryId && {
+          category: {
+            connect: {
+              id: categoryId,
+            },
+          },
+        }),
+      },
     });
   };
 
@@ -39,5 +56,5 @@ export class ProductRepository {
         id,
       },
     });
-  }
+  };
 }

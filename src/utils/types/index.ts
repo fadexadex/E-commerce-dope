@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 
-
 declare global {
   namespace Express {
     interface Request {
@@ -13,5 +12,8 @@ export interface ILoginBody {
   email: string;
   password: string;
 }
+
+export type ICreateProduct = Prisma.ProductCreateInput & { categoryId: string };
+export type IUpdateProduct = Prisma.ProductUpdateInput & { categoryId: string };
 
 export type TokenPayload = Omit<Prisma.UserCreateInput, "password">;

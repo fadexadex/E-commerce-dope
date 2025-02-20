@@ -22,6 +22,11 @@ export class ProductController {
   getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const products = await productService.getAllProducts();
+      if (!(products.length > 0)) {
+        return res.status(StatusCodes.OK).json({
+          message: "No products found",
+        });
+      }
       res.status(StatusCodes.OK).json({
         data: products,
       });
@@ -34,6 +39,11 @@ export class ProductController {
     try {
       const id = req.params.id;
       const product = await productService.getProductById(id);
+      if (!product) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "Product not found",
+        });
+      }
       res.status(StatusCodes.OK).json({
         data: product,
       });

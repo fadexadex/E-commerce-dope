@@ -1,10 +1,11 @@
+import { ICreateProduct, IUpdateProduct } from "utils/types";
 import { ProductRepository } from "../repository";
-import { Prisma } from "@prisma/client";
+
 
 const productRepository = new ProductRepository();
 
 export class ProductService {
-  createProduct = async (data: Prisma.ProductCreateInput) => {
+  createProduct = async (data: ICreateProduct) => {
     return productRepository.createProduct(data);
   };
 
@@ -16,7 +17,7 @@ export class ProductService {
     return productRepository.getProductById(id);
   };
 
-  updateProduct = async (id: string, data: any) => {
+  updateProduct = async (id: string, data: IUpdateProduct) => {
     return productRepository.updateProduct(id, data);
   };
 
