@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "./error.handler";
-import { NextFunction, Request, Response } from "express";
+import e, { NextFunction, Request, Response } from "express";
 import { verifyToken } from "../utils/jwt";
 
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
@@ -23,3 +23,15 @@ export const adminGuard = (req: Request, res: Response, next: NextFunction) => {
   }
   next();
 };
+
+//this is to ensure users can't use their tokens to access other users' resources
+export const validateUserRequest = ( 
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user.id !== req.params.userId) {
+    return next(new AppError("Unauthorized", StatusCodes.FORBIDDEN));
+  }
+  next();
+}
