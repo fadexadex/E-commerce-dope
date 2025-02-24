@@ -33,6 +33,7 @@ export class Server {
   private enableMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.configureRateLimit();
     this.app.use(errorHandler);
   }
 
@@ -48,7 +49,6 @@ export class Server {
   public startApp() {
     this.enableMiddlewares();
     this.setUpRoutes();
-    this.configureRateLimit();
     this.app.listen(this.port, () => {
       console.log(`Server is running on port ${this.port}`);
     });
