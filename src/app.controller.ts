@@ -6,6 +6,7 @@ import userRoutes from "./modules/user/routes";
 import productRoutes from "./modules/product/routes";
 import categoryRoutes from "./modules/category/routes";
 import orderRoutes from "./modules/order/routes";
+import { rateLimit } from "express-rate-limit";
 
 dotenv.config();
 
@@ -16,6 +17,17 @@ export class Server {
   constructor(port: number) {
     this.port = port;
     this.app = express();
+  }
+
+  private configureRateLimit() {
+    this.app.use(
+      rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 100,
+        standardHeaders: true,
+        legacyHeaders: false,
+      })
+    );
   }
 
   private enableMiddlewares() {
@@ -36,6 +48,7 @@ export class Server {
   public startApp() {
     this.enableMiddlewares();
     this.setUpRoutes();
+    this.configureRateLimit();
     this.app.listen(this.port, () => {
       console.log(`Server is running on port ${this.port}`);
     });
