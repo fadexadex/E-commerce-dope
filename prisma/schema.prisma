@@ -35,7 +35,7 @@ model Product {
   categoryId  String
   category    Category    @relation(fields: [categoryId], references: [id])
   orderItems  OrderItem[]
-  cartItems   Cart[]
+  cartItems   CartItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   FlashSale   FlashSale[]
@@ -50,15 +50,15 @@ model Category {
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  userId     String
-  user       User        @relation(fields: [userId], references: [id])
-  totalPrice Decimal
-  status     OrderStatus @default(PENDING)
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  totalPrice      Decimal
+  status          OrderStatus @default(PROCESSING)
   shippingAddress String
-  items      OrderItem[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
 
 model OrderItem {
@@ -72,12 +72,22 @@ model OrderItem {
 }
 
 model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
   id        String  @id @default(cuid())
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
+  price     Decimal
 }
 
 model FlashSale {
@@ -96,7 +106,7 @@ enum Role {
 }
 
 enum OrderStatus {
-  PENDING
+  PROCESSING
   SHIPPED
   DELIVERED
   CANCELLED

@@ -1,12 +1,12 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { ICreateProduct, IUpdateProduct } from "utils/types";
+import { prisma } from "../../../utils/db";
 
 export class ProductRepository {
-  private prisma = new PrismaClient();
 
   createProduct = async (data: ICreateProduct) => {
     const { categoryId, ...productData } = data;
-    return this.prisma.product.create({
+    return prisma.product.create({
       data: {
         ...productData,
         category: {
@@ -19,11 +19,11 @@ export class ProductRepository {
   };
 
   getAllProducts = async () => {
-    return this.prisma.product.findMany();
+    return prisma.product.findMany();
   };
 
   getProductById = async (id: string) => {
-    return this.prisma.product.findUnique({
+    return prisma.product.findUnique({
       where: {
         id,
       },
@@ -33,7 +33,7 @@ export class ProductRepository {
   updateProduct = async (id: string, data: IUpdateProduct) => {
     const { categoryId, ...productData } = data;
 
-    return this.prisma.product.update({
+    return prisma.product.update({
       where: {
         id,
       },
@@ -51,7 +51,7 @@ export class ProductRepository {
   };
 
   deleteProduct = async (id: string) => {
-    return this.prisma.product.delete({
+    return prisma.product.delete({
       where: {
         id,
       },

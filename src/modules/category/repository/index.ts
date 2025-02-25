@@ -1,20 +1,19 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { prisma } from "../../../utils/db";
 
 export class CategoryRepository {
-  private prisma = new PrismaClient();
-
   createCategory = async (data: Prisma.CategoryCreateInput) => {
-    return this.prisma.category.create({
+    return prisma.category.create({
       data,
     });
   };
 
   getAllCategories = async () => {
-    return this.prisma.category.findMany();
+    return prisma.category.findMany();
   };
 
   getCategoryById = async (id: string) => {
-    return this.prisma.category.findUnique({
+    return prisma.category.findUnique({
       where: {
         id,
       },
@@ -22,7 +21,7 @@ export class CategoryRepository {
   };
 
   updateCategory = async (id: string, data: Prisma.CategoryUpdateInput) => {
-    return this.prisma.category.update({
+    return prisma.category.update({
       where: {
         id,
       },
@@ -31,10 +30,10 @@ export class CategoryRepository {
   };
 
   deleteCategory = async (id: string) => {
-    return this.prisma.category.delete({
+    return prisma.category.delete({
       where: {
         id,
       },
     });
-  }
+  };
 }

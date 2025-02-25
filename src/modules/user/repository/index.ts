@@ -1,10 +1,9 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { prisma } from "../../../utils/db";
 
 export class UserRepository {
-  private prisma = new PrismaClient();
-
   getUserById = async (id: string) => {
-    return this.prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: {
         id,
       },
@@ -12,7 +11,7 @@ export class UserRepository {
   };
 
   updateUser = async (id: string, data: Prisma.UserUpdateInput) => {
-    return this.prisma.user.update({
+    return prisma.user.update({
       where: {
         id,
       },
@@ -21,7 +20,7 @@ export class UserRepository {
   };
 
   deleteUser = async (id: string) => {
-    return this.prisma.user.delete({
+    return prisma.user.delete({
       where: {
         id,
       },

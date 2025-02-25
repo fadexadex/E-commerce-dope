@@ -6,7 +6,9 @@ import userRoutes from "./modules/user/routes";
 import productRoutes from "./modules/product/routes";
 import categoryRoutes from "./modules/category/routes";
 import orderRoutes from "./modules/order/routes";
+import flashSalesRoutes from "./modules/flash-sales/routes";
 import { rateLimit } from "express-rate-limit";
+import cartRoutes from "./modules/cart/routes";
 
 dotenv.config();
 
@@ -42,6 +44,8 @@ export class Server {
     this.app.use("/api/v1/users", userRoutes);
     this.app.use("/api/v1/products/category", categoryRoutes);
     this.app.use("/api/v1/products", productRoutes);
+    this.app.use("/api/v1/cart", cartRoutes);
+    this.app.use("/api/v1/flash-sales", flashSalesRoutes);
     this.app.use("/api/v1/orders", orderRoutes);
     this.app.use(errorHandler);
   }

@@ -27,3 +27,4 @@ export type ICreateOrder = Prisma.OrderCreateInput & {
 export type TokenPayload = Omit<Prisma.UserCreateInput, "password">;
 
 export type IOrderStatus = OrderStatus;
+export type ICartItem = Prisma.CartItemCreateInput & { productId: string };

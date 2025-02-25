@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client";
 import { ICreateOrder, IOrderStatus } from "utils/types";
+import { prisma } from "../../../utils/db";
 
 export class OrderRepository {
-  private prisma = new PrismaClient();
+
 
   async createOrder(data: ICreateOrder) {
     const { userId, items, ...orderData } = data;
   
-    return await this.prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           ...orderData,
@@ -60,7 +60,7 @@ export class OrderRepository {
   
 
   async getOrders() {
-    return await this.prisma.order.findMany({
+    return await prisma.order.findMany({
       include: {
         items: {
           include: {
@@ -72,7 +72,7 @@ export class OrderRepository {
   }
 
   async getOrderById(id: string) {
-    return await this.prisma.order.findUnique({
+    return await prisma.order.findUnique({
       where: {
         id,
       },
@@ -87,7 +87,7 @@ export class OrderRepository {
   }
 
   async getUserOrders(userId: string) {
-    return await this.prisma.order.findMany({
+    return await prisma.order.findMany({
       where: {
         userId,
       },
@@ -102,7 +102,7 @@ export class OrderRepository {
   }
 
   async updateOrderStatus(id: string, status: IOrderStatus) {
-    return await this.prisma.order.update({
+    return await prisma.order.update({
       where: {
         id,
       },
@@ -113,7 +113,7 @@ export class OrderRepository {
   }
 
   async cancelOrder(id: string) {
-    return await this.prisma.order.update({
+    return await prisma.order.update({
       where: {
         id,
       },

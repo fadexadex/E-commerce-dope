@@ -5,9 +5,7 @@ import { StatusCodes } from "http-status-codes";
 
 export class AuthValidator {
   validateRegisterBody = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = registerSchema.validate(req.body, {
-      abortEarly: false,
-    });
+    const { error } = registerSchema.validate(req.body);
     if (error) {
       next(
         new AppError(
@@ -20,9 +18,7 @@ export class AuthValidator {
   };
 
   validateLoginBody = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = loginSchema.validate(req.body, {
-      abortEarly: false,
-    });
+    const { error } = loginSchema.validate(req.body);
     if (error) {
       next(
         new AppError(

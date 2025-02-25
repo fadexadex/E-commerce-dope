@@ -1,20 +1,14 @@
 import { Request, Response, NextFunction } from "express";
+import { cartItemSchema, updateCartItemSchema, itemIdSchema } from "./schemas";
 import { StatusCodes } from "http-status-codes";
-import {
-  orderSchema,
-  updateOrderStatusSchema,
-  orderIdSchema,
-  userIdSchema,
-} from "./schemas";
 import { AppError } from "../../../middlewares/error.handler";
 
-
-export const validateOrder = (
+export const addCartItemValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = orderSchema.validate(req.body);
+  const { error } = cartItemSchema.validate(req.body);
   if (error) {
     return next(
       new AppError(
@@ -26,12 +20,12 @@ export const validateOrder = (
   next();
 };
 
-export const validateOrderStatus = (
+export const updateCartItemValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = updateOrderStatusSchema.validate(req.body);
+  const { error } = updateCartItemSchema.validate(req.body);
   if (error) {
     return next(
       new AppError(
@@ -43,26 +37,14 @@ export const validateOrderStatus = (
   next();
 };
 
-export const validateOrderId = (
+export const itemIdValidator = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { error } = orderIdSchema.validate(req.params);
+  const { error } = itemIdSchema.validate(req.params);
   if (error) {
-    return next(new AppError("Invalid order ID", StatusCodes.BAD_REQUEST));
-  }
-  next();
-};
-
-export const validateUserId = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { error } = userIdSchema.validate(req.params);
-  if (error) {
-    return next(new AppError("Invalid user ID", StatusCodes.BAD_REQUEST));
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
   next();
 };
