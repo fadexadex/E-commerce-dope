@@ -3,6 +3,7 @@ import { FlashSaleController } from "./controller";
 import { adminGuard, authGuard } from "../../middlewares/auth.middleware";
 import {
   flashSaleIdValidator,
+  updateFlashSaleValidator,
   flashSaleValidator,
 } from "../../middlewares/validators/flash-sales/validators";
 
@@ -28,9 +29,10 @@ router.put(
   authGuard,
   adminGuard,
   flashSaleIdValidator,
-  flashSaleValidator,
+  updateFlashSaleValidator, 
   flashSaleController.updateFlashSale
 );
+
 router.delete(
   "/:id",
   authGuard,

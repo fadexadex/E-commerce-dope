@@ -92,6 +92,7 @@ model CartItem {
 
 model FlashSale {
   id                 String   @id @default(cuid())
+  name               String
   productId          String
   product            Product  @relation(fields: [productId], references: [id])
   discountPercentage Decimal
