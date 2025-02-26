@@ -9,6 +9,8 @@ import orderRoutes from "./modules/order/routes";
 import flashSalesRoutes from "./modules/flash-sales/routes";
 import { rateLimit } from "express-rate-limit";
 import cartRoutes from "./modules/cart/routes";
+import homeRoute from "./home.route";
+import cors from "cors"
 
 dotenv.config();
 
@@ -35,11 +37,13 @@ export class Server {
   private enableMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cors());
     this.configureRateLimit();
     this.app.use(errorHandler);
   }
 
   private setUpRoutes() {
+    this.app.use("/", homeRoute);
     this.app.use("/api/v1/auth", authRoutes);
     this.app.use("/api/v1/users", userRoutes);
     this.app.use("/api/v1/products/category", categoryRoutes);
