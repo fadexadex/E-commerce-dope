@@ -31,13 +31,17 @@ This project is a **RESTful API** built for an **e-commerce platform**, designed
 
 - Includes a script to **migrate product and order data from a CSV file** into the database.
 
+### 6. **Flash Sales & High-Traffic Optimization**
+
+- Implements a **Flash Sale system**, allowing for **time-sensitive discounts**.
+- Optimized database queries using **PostgreSQL indexing and efficient query patterns**.
+
 ## Tech Stack
 
 - **Backend:** Node.js (Express)
 - **Database:** PostgreSQL
 - **Authentication:** JWT
 - **API Security:** Rate Limiting, CORS, Input Validation
-- **Deployment:** TBD
 
 ## Installation & Setup
 
