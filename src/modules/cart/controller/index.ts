@@ -26,15 +26,6 @@ export class CartController {
     }
   }
 
-  async updateCartItemQuantity(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { itemId, quantity } = req.body;
-      const updatedItem = await cartService.updateCartItemQuantity(itemId, quantity);
-      return res.status(StatusCodes.OK).json(updatedItem);
-    } catch (error) {
-      next(error);
-    }
-  }
 
   async removeCartItem(req: Request, res: Response, next: NextFunction) {
     try {

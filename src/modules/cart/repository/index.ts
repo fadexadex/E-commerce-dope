@@ -46,12 +46,6 @@ export class CartRepository {
     });
   }
 
-  async updateCartItemQuantity(itemId: string, quantity: number) {
-    return await prisma.cartItem.update({
-      where: { id: itemId },
-      data: { quantity },
-    });
-  }
 
   async removeCartItem(itemId: string) {
     return await prisma.cartItem.delete({
