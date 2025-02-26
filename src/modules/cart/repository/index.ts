@@ -3,39 +3,46 @@ import { prisma } from "../../../utils/db";
 
 export class CartRepository {
   async addCartItem(userId: string, item: ICartItem) {
-    let cart = await prisma.cart.findUnique({
-      where: { userId },
-    });
+    return prisma.$transaction(async (tx) => {
+      const productExists = await tx.product.findUnique({
+        where: { id: item.productId },
+      });
+      if (!productExists) {
+        throw new Error("Product not found");
+      }
 
-    if (!cart) {
-      cart = await prisma.cart.create({
-        data: {
-          userId,
+      let cart = await tx.cart.findUnique({
+        where: { userId },
+      });
+      
+      if (!cart) {
+        cart = await tx.cart.create({
+          data: { userId },
+        });
+      }
+
+      const existingItem = await tx.cartItem.findFirst({
+        where: {
+          cartId: cart.id,
+          productId: item.productId,
         },
       });
-    }
 
-    const existingItem = await prisma.cartItem.findFirst({
-      where: {
-        cartId: cart.id,
-        productId: item.productId,
-      },
-    });
+      if (existingItem) {
+        return await tx.cartItem.update({
+          where: { id: existingItem.id },
+          data: { quantity: existingItem.quantity + item.quantity },
+        });
+      }
 
-    if (existingItem) {
-      return await prisma.cartItem.update({
-        where: { id: existingItem.id },
-        data: { quantity: existingItem.quantity + item.quantity },
+      return await tx.cartItem.create({
+        data: {
+          cartId: cart.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+        },
       });
-    }
-
-    return await prisma.cartItem.create({
-      data: {
-        cartId: cart.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-      },
     });
   }
 
@@ -45,7 +52,6 @@ export class CartRepository {
       include: { items: true },
     });
   }
-
 
   async removeCartItem(itemId: string) {
     return await prisma.cartItem.delete({

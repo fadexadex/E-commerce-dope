@@ -21,7 +21,7 @@ model User {
   lastName  String
   role      Role     @default(CUSTOMER)
   orders    Order[]
-  cartItems Cart[]
+  cart      Cart?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -33,12 +33,17 @@ model Product {
   price       Decimal
   stock       Int
   categoryId  String
-  category    Category    @relation(fields: [categoryId], references: [id])
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   orderItems  OrderItem[]
   cartItems   CartItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   FlashSale   FlashSale[]
+
+  @@index([price])
+  @@index([stock])
+  @@index([categoryId])
+  @@index([createdAt])
 }
 
 model Category {
@@ -47,58 +52,76 @@ model Category {
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@index([createdAt])
 }
 
 model Order {
   id              String      @id @default(cuid())
   userId          String
-  user            User        @relation(fields: [userId], references: [id])
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   totalPrice      Decimal
   status          OrderStatus @default(PROCESSING)
   shippingAddress String
   items           OrderItem[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([totalPrice])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model OrderItem {
   id        String  @id @default(cuid())
   orderId   String
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
   price     Decimal
+
+  @@index([orderId])
+  @@index([productId])
 }
 
 model Cart {
   id        String     @id @default(cuid())
   userId    String     @unique
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade) // Define relation only here
   items     CartItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@index([createdAt])
 }
 
 model CartItem {
   id        String  @id @default(cuid())
   cartId    String
-  cart      Cart    @relation(fields: [cartId], references: [id])
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
   price     Decimal
+
+  @@index([cartId])
+  @@index([productId])
 }
 
 model FlashSale {
   id                 String   @id @default(cuid())
   name               String
   productId          String
-  product            Product  @relation(fields: [productId], references: [id])
+  product            Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   discountPercentage Decimal
   startTime          DateTime
   endTime            DateTime
   stockLimit         Int
+
+  @@index([productId])
+  @@index([startTime, endTime])
 }
 
 enum Role {
