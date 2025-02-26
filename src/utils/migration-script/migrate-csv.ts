@@ -91,7 +91,7 @@ const migrateOrders = async () => {
       id: order.id,
       userId: order.userId,
       totalPrice: new Decimal(order.totalPrice),
-      status: order.status as "PENDING" | "SHIPPED" | "DELIVERED" | "CANCELLED",
+      status: order.status as   "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED",
       shippingAddress: order.shippingAddress || "",
       createdAt: new Date(order.createdAt),
       updatedAt: new Date(order.updatedAt),
@@ -157,6 +157,7 @@ const migrateFlashSales = async () => {
     const flashSales = rawFlashSales.map((sale) => ({
       id: sale.id,
       productId: sale.productId,
+      name: sale.name,
       discountPercentage: new Decimal(sale.discountPercentage),
       startTime: new Date(sale.startTime),
       endTime: new Date(sale.endTime),
